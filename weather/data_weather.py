@@ -33,42 +33,6 @@ class Weather:
         self.logger.debug("[*] - Data loading complete.")
 
 
-    """
-        Read the data from the weather data set file.
-
-        Args:
-            dataset: file that contain the data of the weather.
-
-        Returns:
-            None
-    """
-
-    def read_weather_file(self, dataset, type):
-
-        shortest_distance = 5000 # Default value.
-
-        lats = dataset.variables[type][:]
-        lons = dataset.variables[type][:]
-        times = dataset.variables[type][:]
-        vals = dataset.variables[type][:]
-
-        continuer = True
-
-
-
-        #print(shortest_distance, real_coordinate)
-    """
-        Function to calculate km between two point (lat & lon)
-
-        Args:
-            lat_1: The lat where you are.
-            lon_1: The lon where you are.
-            lat_2: The lat that you going to compare.
-            lon_2: The lon that you going to compare.
-
-        Returns:
-            distance: Distance in km between the two 2D coordinate.
-    """
 
     def calcul_distance_coordinate(self, lat_1, lon_1, lat_2, lon_2):
         R = 6371.0  # Earth's radius in kilometers

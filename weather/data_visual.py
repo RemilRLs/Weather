@@ -1,5 +1,9 @@
 from weather.data_weather import Weather
 from netCDF4 import Dataset
+from weather.operation import Operation
+import cartopy.feature as cfeature
+import matplotlib as mpl
+import cartopy.crs as ccrs
 
 import matplotlib.pylab as plt
 import numpy as np
@@ -23,8 +27,7 @@ class Visual:
     def generate_visual_temperature(self):
 
         weather = Weather("test", "test", "test")
-        shortest_distance = 5000  # Default value.
-
+        shortest_distance = 5000  # Default value
         lats = self.data_tmin.variables['lat'][:]
         lons = self.data_tmin.variables['lon'][:]
         vals_tmin = self.data_tmin.variables['tmin'][:]
@@ -64,7 +67,6 @@ class Visual:
         prec_data = vals_prec[:, pos[0], pos[1]]
         prec_data = prec_data[:-1]
 
-        print(vals_prec[:, pos[0], pos[1]])
 
         fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
 
@@ -80,21 +82,30 @@ class Visual:
         ax2.set_ylabel('Precipitation (mm)')
         ax2.legend()
 
-        # Show the plot
+
         plt.show()
 
 
-        dataset = Dataset('resources/temperature/tmin.2020.nc', 'r')
 
-        lats = dataset.variables['lat'][:]
 
-        lons = dataset.variables['lon'][:]
+    def generate_map(self):
+        operation = Operation(self.data_tmax)
 
-        vals = dataset.variables['tmin'][:]
+        day = operation.getAverage()
 
-        ax = plt.subplot(111)
+        lats = self.data_tmax.variables['lat'][:]
 
-        ax.pcolormesh(lons, lats, vals[0], vmin=-25, vmax=25, cmap = "jet")
+        lons = self.data_tmax.variables['lon'][:]
+
+        vals = self.data_tmax.variables['tmax'][:]
+
+        ax = plt.subplot(111, projection=ccrs.PlateCarree())
+        c = ax.pcolormesh(lons, lats, vals[day], vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet")
+
+        ax.coastlines(resolution='110m');
+        ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+        ax.add_feature(cfeature.LAND.with_scale('50m'))
+        ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+        plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+
         plt.show()
-
-
