@@ -1,10 +1,10 @@
 from weather.data_weather import Weather
-from netCDF4 import Dataset
 from weather.operation import Operation
-import cartopy.feature as cfeature
-import matplotlib as mpl
-import cartopy.crs as ccrs
+from matplotlib.figure import Figure
 
+
+import cartopy.feature as cfeature
+import cartopy.crs as ccrs
 import matplotlib.pylab as plt
 import numpy as np
 import numpy.ma as ma
@@ -13,10 +13,11 @@ import logging
 
 class Visual:
 
-    def __init__(self, data_tmin, data_tmax, data_prec, lat, lon):
+    def __init__(self, data_tmin, data_tmax, data_prec, lat, lon, window):
         self.data_tmin = data_tmin
         self.data_tmax = data_tmax
         self.data_prec = data_prec
+        self.tkwindow = window
         self.lat = lat
         self.lon = lon
         self.logger = logging.Logger("Visual")
@@ -26,7 +27,7 @@ class Visual:
 
     def generate_visual_temperature(self):
 
-        weather = Weather("test", "test", "test")
+        weather = Weather()
         shortest_distance = 5000  # Default value
         lats = self.data_tmin.variables['lat'][:]
         lons = self.data_tmin.variables['lon'][:]
@@ -59,31 +60,38 @@ class Visual:
         print(shortest_distance, real_coordinate, pos)
 
         tmin_data = vals_tmin[:, pos[0], pos[1]]
-        tmin_data = tmin_data[:-1]
-
         tmax_data = vals_tmax[:, pos[0], pos[1]]
-        tmax_data = tmax_data[:-1]
+
+        if len(tmin_data) == 366:
+            tmin_data = tmin_data[:-1]
+            tmax_data = tmax_data[:-1]
 
         prec_data = vals_prec[:, pos[0], pos[1]]
-        prec_data = prec_data[:-1]
+
+        if len(prec_data) == 366:
+            prec_data = prec_data[:-1]
+
+        fig = Figure(figsize=(15,6), frameon= True)
+        gs = fig.add_gridspec(3,1)
+        plot1 = fig.add_subplot(gs[0, 0])
 
 
-        fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
+        plot1.plot(range(1, 366), tmin_data, color='blue', label='Minimum Temperature')
+        plot1.plot(range(1, 366), tmax_data, color='red', label='Maximum Temperature')
+        plot1.set_title('Temperature')
+        plot1.set_ylabel('Temperature (C)')
+        plot1.legend()
 
-        ax1.plot(range(1, 366), tmin_data, color='blue', label='Minimum Temperature')
-        ax1.plot(range(1, 366), tmax_data, color='red', label='Maximum Temperature')
-        ax1.set_title('Temperature')
-        ax1.set_ylabel('Temperature (C)')
-        ax1.legend()
+        plot2 = fig.add_subplot(gs[2, 0])
 
-        ax2.plot(range(1, 366), prec_data, color='green', label='Precipitation')
-        ax2.set_title('Precipitation')
-        ax2.set_xlabel('Day')
-        ax2.set_ylabel('Precipitation (mm)')
-        ax2.legend()
+        plot2.plot(range(1, 366), prec_data, color='green', label='Precipitation')
+        plot2.set_title('Precipitation')
+        plot2.set_xlabel('Day')
+        plot2.set_ylabel('Precipitation (mm)')
+        plot2.legend()
 
 
-        plt.show()
+        return fig
 
 
 

@@ -6,10 +6,7 @@ import math
 
 class Weather:
 
-    def __init__(self, p_path_file1, p_path_file2, p_path_file3):
-        self.pathFile1 = p_path_file1
-        self.pathFile2 = p_path_file2
-        self.pathFile3 = p_path_file3
+    def __init__(self):
         self.logger = logging.Logger("Weather")
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.DEBUG)
@@ -25,11 +22,11 @@ class Weather:
             None
     """
 
-    def open_weather_file(self):
+    def open_weather_file(self, p_path_file1, p_path_file2, p_path_file3):
         self.logger.debug("[#] - Loading data...")
-        self.dataset_tmin = Dataset(self.pathFile1, 'r')
-        self.dataset_tmax = Dataset(self.pathFile2, 'r')
-        self.dataset_prec = Dataset(self.pathFile3, 'r')
+        self.dataset_tmin = Dataset(p_path_file1, 'r')
+        self.dataset_tmax = Dataset( p_path_file2, 'r')
+        self.dataset_prec = Dataset(p_path_file3, 'r')
         self.logger.debug("[*] - Data loading complete.")
 
 
