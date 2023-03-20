@@ -96,10 +96,10 @@ class Visual:
 
 
 
-    def generate_map(self):
+    def generate_map(self, day):
         operation = Operation(self.data_tmax)
 
-        day = operation.getAverage()
+        #day = operation.getAverage()
 
         lats = self.data_tmax.variables['lat'][:]
 
