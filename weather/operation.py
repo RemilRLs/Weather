@@ -9,9 +9,6 @@ class Operation:
         self.dataset = dataset
 
     def getAverage(self):
-        lats = self.dataset.variables['lat'][:]
-        lons = self.dataset.variables['lon'][:]
-        times = self.dataset.variables['time'][:]
         vals = self.dataset.variables['tmax'][:]
 
         # We get the max average temperature in a year.

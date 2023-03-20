@@ -28,7 +28,7 @@ class Visual:
     def generate_visual_temperature(self):
 
         weather = Weather()
-        shortest_distance = 5000  # Default value
+        shortest_distance = 10000  # Default value
         lats = self.data_tmin.variables['lat'][:]
         lons = self.data_tmin.variables['lon'][:]
         vals_tmin = self.data_tmin.variables['tmin'][:]
@@ -36,7 +36,6 @@ class Visual:
 
         vals_prec = self.data_prec.variables['precip'][:]
 
-        avg = np.zeros((len(lats), len(lons)))
         mask = [[False] * len(lons) for _ in range(len(lats))]
 
         continuer = True
@@ -46,14 +45,15 @@ class Visual:
                 if ma.is_masked(vals_tmin[0][i][j]):
                     mask[i][j] = True
                     continue
-                km = weather.calcul_distance_coordinate(self.lat, self.lon + 360, lat, lon)
+                km = weather.calcul_distance_coordinate(self.lat, self.lon, lat, lon)
                 shortest_distance, coordinate = weather.shortest_distance_coordinate(lat, lon, km, shortest_distance)
+                print(shortest_distance, self.lat , self.lon)
 
                 if coordinate != (0, 0):
                     real_coordinate = coordinate
                     pos = [i, j]
-                if lon > 180:
-                    lon = lon - 360
+                if self.lon > 180:
+                    self.lon = self.lon - 360
                 break
             if not continuer:
                 break

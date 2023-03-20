@@ -1,6 +1,7 @@
 from netCDF4 import Dataset
 
 import logging
+import numpy as np
 import math
 
 
@@ -32,22 +33,26 @@ class Weather:
 
 
     def calcul_distance_coordinate(self, lat_1, lon_1, lat_2, lon_2):
-        R = 6371.0  # Earth's radius in kilometers
+        if lon_2 > 180:
+            lon_2 = lon_2 - 360
+
+
+        R = 6373.0  # Earth's radius in kilometers
 
         # We put everything in radian.
 
-        lat_1_r = math.radians(lat_1)
-        lon_1_r = math.radians(lon_1)
-        lat_2_r = math.radians(lat_2)
-        lon_2_r = math.radians(lon_2)
+        lat_1_r = np.radians(lat_1)
+        lon_1_r = np.radians(lon_1)
+        lat_2_r = np.radians(lat_2)
+        lon_2_r = np.radians(lon_2)
 
         # We calculate the difference between the two longitude and lattitude.
 
         dlon = lon_2_r - lon_1_r
         dlat = lat_2_r - lat_1_r
 
-        a = math.sin(dlat / 2) ** 2 + math.cos(lat_1_r) * math.cos(lat_2_r) * math.sin(dlon / 2) ** 2
-        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+        a = np.sin(dlat / 2) ** 2 + np.cos(lat_1_r) * np.cos(lat_2_r) * np.sin(dlon / 2) ** 2
+        c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
 
         distance = R * c
 
@@ -69,7 +74,7 @@ class Weather:
 
     def shortest_distance_coordinate(self, lat, lon, distance, shortest_distance):
 
-        if shortest_distance > distance:
+        if distance < shortest_distance:
             coordinate = (lat, lon)
             shortest_distance = distance
         else:
