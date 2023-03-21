@@ -13,19 +13,17 @@ import logging
 
 class Visual:
 
-    def __init__(self, data_tmin, data_tmax, data_prec, lat, lon, window):
+    def __init__(self, data_tmin, data_tmax, data_prec, window):
         self.data_tmin = data_tmin
         self.data_tmax = data_tmax
         self.data_prec = data_prec
         self.tkwindow = window
-        self.lat = lat
-        self.lon = lon
         self.logger = logging.Logger("Visual")
         console_handler = logging.StreamHandler()
         console_handler.setLevel(logging.DEBUG)
         self.logger.addHandler(console_handler)  # To handle the log.
 
-    def generate_visual_temperature(self):
+    def generate_visual_temperature(self, lat_user, lon_user):
 
         weather = Weather()
         shortest_distance = 10000  # Default value
@@ -45,15 +43,15 @@ class Visual:
                 if ma.is_masked(vals_tmin[0][i][j]):
                     mask[i][j] = True
                     continue
-                km = weather.calcul_distance_coordinate(self.lat, self.lon, lat, lon)
+
+                km = weather.calcul_distance_coordinate(lat_user, lon_user, lat, lon)
                 shortest_distance, coordinate = weather.shortest_distance_coordinate(lat, lon, km, shortest_distance)
-                print(shortest_distance, self.lat , self.lon)
 
                 if coordinate != (0, 0):
                     real_coordinate = coordinate
                     pos = [i, j]
-                if self.lon > 180:
-                    self.lon = self.lon - 360
+                if lon_user > 180:
+                    lon_user = lon_user - 360
                 break
             if not continuer:
                 break
@@ -75,12 +73,14 @@ class Visual:
         gs = fig.add_gridspec(3,1)
         plot1 = fig.add_subplot(gs[0, 0])
 
-
+        # Temperature Min and Max Curve.
         plot1.plot(range(1, 366), tmin_data, color='blue', label='Minimum Temperature')
         plot1.plot(range(1, 366), tmax_data, color='red', label='Maximum Temperature')
         plot1.set_title('Temperature')
         plot1.set_ylabel('Temperature (C)')
         plot1.legend()
+
+        # Precipation Curve.
 
         plot2 = fig.add_subplot(gs[2, 0])
 
@@ -96,16 +96,24 @@ class Visual:
 
 
 
-    def generate_map(self, day):
-        operation = Operation(self.data_tmax)
+    def generate_map(self, day, temp):
 
-        #day = operation.getAverage()
+        fig = Figure(figsize=(15,6), frameon= True)
+        gs = fig.add_gridspec(3,1)
 
         lats = self.data_tmax.variables['lat'][:]
 
         lons = self.data_tmax.variables['lon'][:]
 
-        vals = self.data_tmax.variables['tmax'][:]
+        if(temp == 'tmin'):
+            vals = self.data_tmin.variables[temp][:]
+        else:
+            vals = self.data_tmax.variables[temp][:]
+
+
+
+        #plot2 = fig.add_subplot(gs[2, 0])
+
 
         ax = plt.subplot(111, projection=ccrs.PlateCarree())
         c = ax.pcolormesh(lons, lats, vals[day], vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet")

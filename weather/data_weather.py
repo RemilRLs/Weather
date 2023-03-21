@@ -2,7 +2,6 @@ from netCDF4 import Dataset
 
 import logging
 import numpy as np
-import math
 
 
 class Weather:

@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.ma as ma
 import datetime as dt # I have to this because something went wrong.
 
 
@@ -8,25 +9,24 @@ class Operation:
     def __init__(self, dataset):
         self.dataset = dataset
 
-    def getAverage(self):
-        vals = self.dataset.variables['tmax'][:]
+    def getAverage(self, temp, dataset):
+        vals = dataset.variables[temp][:]
 
         # We get the max average temperature in a year.
-        avg = np.mean(vals, axis=0)
-        max_day = np.argmax(avg)
-        day, remainder = divmod(max_day, 365)
+
+        # We calculate the average/mean for each day on the longitude and the latitude (that one was so hard to find).
+        daily_avg = np.mean(vals, axis=(1, 2))
+
+        # We get the index of the max temp average in a day.
+        hottest_day = np.argmax(daily_avg)
 
 
-        return day
+        return hottest_day
 
     def generate_date(self, year, month):
 
         nb_day = 365
         list_day = list()
-
-
-        print(month)
-        print(year)
 
         # Leap year.
 
