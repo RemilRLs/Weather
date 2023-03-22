@@ -18,7 +18,7 @@ class Operation:
         daily_avg = np.mean(vals, axis=(1, 2))
 
         # We get the index of the max temp average in a day.
-        hottest_day = np.argmax(daily_avg)
+        hottest_day = np.argmin(daily_avg)
 
 
         return hottest_day
@@ -108,3 +108,14 @@ class Operation:
         number_day = user_date.toordinal() - dt.date(user_date.year, 1, 1).toordinal() + 1
 
         return number_day
+
+    def return_day_in_month(self, year, month):
+
+        nub_month = self.month_to_num(month)
+
+        if(nub_month != 12):
+            day = (dt.date(year, nub_month + 1, 1) - dt.date(year, nub_month, 1)).days
+        else: # If it's december we go to the next year.
+            day = (dt.date(year + 1, 1, 1) - dt.date(year, nub_month, 1)).days
+
+        return day
