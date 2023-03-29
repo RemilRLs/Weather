@@ -9,7 +9,7 @@ class Operation:
     def __init__(self, dataset):
         self.dataset = dataset
 
-    def getAverage(self, temp, dataset):
+    def getAverage_max(self, temp, dataset):
         vals = dataset.variables[temp][:]
 
         # We get the max average temperature in a year.
@@ -18,10 +18,24 @@ class Operation:
         daily_avg = np.mean(vals, axis=(1, 2))
 
         # We get the index of the max temp average in a day.
-        hottest_day = np.argmin(daily_avg)
+        hotest_day = np.argmax(daily_avg)
 
 
-        return hottest_day
+        return hotest_day
+
+    def getAverage_min(self, temp, dataset):
+        vals = dataset.variables[temp][:]
+
+        # We get the max average temperature in a year.
+
+        # We calculate the average/mean for each day on the longitude and the latitude (that one was so hard to find).
+        daily_avg = np.mean(vals, axis=(1, 2))
+
+        # We get the index of the max temp average in a day.
+        coldest_day = np.argmin(daily_avg)
+
+
+        return coldest_day
 
     def generate_date(self, year, month):
 

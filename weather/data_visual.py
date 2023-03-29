@@ -98,7 +98,7 @@ class Visual:
 
     def generate_map(self, day, temp):
 
-        fig = Figure(figsize=(15,6), frameon= True)
+        fig = plt.figure(figsize=(8,6), frameon=True)
         gs = fig.add_gridspec(3,1)
 
 
@@ -112,28 +112,36 @@ class Visual:
             lons = self.data_tmax.variables['lon'][:]
             vals = self.data_tmax.variables[temp][:]
 
-
-
-
-        ax = plt.subplot(111, projection=ccrs.PlateCarree())
+        ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
         c = ax.pcolormesh(lons, lats, vals[day], vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet")
 
-        ax.coastlines(resolution='110m');
+        ax.coastlines(resolution='110m')
         ax.add_feature(cfeature.OCEAN.with_scale('50m'))
         ax.add_feature(cfeature.LAND.with_scale('50m'))
         ax.add_feature(cfeature.BORDERS.with_scale('50m'))
-        plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+        fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
 
-        plt.show()
+        return fig
 
-    def generate_map_month(self, start_month, end_month):
+    def generate_map_month(self, start_month, end_month, temp):
+
         lats = self.data_tmax.variables['lat'][:]
-
         lons = self.data_tmax.variables['lon'][:]
-        fig = Figure(figsize=(15,6), frameon= True)
-        gs = fig.add_gridspec(3,1)
-
         vals = self.data_tmax.variables['tmax'][:]
+
+        if(temp == 'tmin'):
+            lats = self.data_tmin.variables['lat'][:]
+            lons = self.data_tmin.variables['lon'][:]
+            vals = self.data_tmin.variables[temp][:]
+        else:
+            lats = self.data_tmax.variables['lat'][:]
+            lons = self.data_tmax.variables['lon'][:]
+            vals = self.data_tmax.variables[temp][:]
+
+
+        fig = plt.figure(figsize=(8,6), frameon=True)
+
+
 
         monthly_vals = np.mean(vals[start_month : end_month], axis= 0) # On fait la moyenne sur chaque jour des longitudes et des lattitudes. 2D Tab.
 
@@ -147,4 +155,4 @@ class Visual:
         ax.add_feature(cfeature.BORDERS.with_scale('50m'))
         plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
 
-        plt.show()
+        return fig
