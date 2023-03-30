@@ -113,7 +113,7 @@ class Visual:
             vals = self.data_tmax.variables[temp][:]
 
         ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
-        c = ax.pcolormesh(lons, lats, vals[day], vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet")
+        c = ax.pcolormesh(lons, lats, vals[day], vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
 
         ax.coastlines(resolution='110m')
         ax.add_feature(cfeature.OCEAN.with_scale('50m'))
@@ -147,7 +147,7 @@ class Visual:
 
 
         ax = plt.subplot(111, projection=ccrs.PlateCarree())
-        c = ax.pcolormesh(lons, lats, monthly_vals, vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet")
+        c = ax.pcolormesh(lons, lats, monthly_vals, vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
 
         ax.coastlines(resolution='110m');
         ax.add_feature(cfeature.OCEAN.with_scale('50m'))
