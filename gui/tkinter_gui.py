@@ -123,7 +123,7 @@ class Visual_Tkinter:
         label_data_day = tk.Label(self.global_frame_page_day, text='Data :')
         label_data_day.grid(row=0, column=0, sticky=tk.E)
         self.drop_data_temp = tk.OptionMenu(self.global_frame_page_day, self.selected_data_temp, "Minimum Temperature",
-                                       "Maximum Temperature")
+                                       "Maximum Temperature", "Precipitation")
         self.drop_data_temp.grid(row=0, column=2, sticky=tk.W)
 
         self.drop_data_temp.config(state=tk.DISABLED)
@@ -180,7 +180,7 @@ class Visual_Tkinter:
         label_data_day = tk.Label(self.global_frame_page_month, text='Data :')
         label_data_day.grid(row=0, column=0, sticky=tk.E)
         self.drop_data_temp_month_2 = tk.OptionMenu(self.global_frame_page_month, self.selected_data_temp, "Minimum Temperature",
-                                       "Maximum Temperature")
+                                       "Maximum Temperature", "Precipitation")
         self.drop_data_temp_month_2.grid(row=0, column=2, sticky=tk.W)
         self.drop_data_temp_month_2.config(state=tk.DISABLED)
 
@@ -311,7 +311,12 @@ class Visual_Tkinter:
 
             number_day = self.operation.get_number_day(self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
             self.logger.debug("[INFO] - Day number : {0}".format(number_day))
-            self.logger.debug("[INFO] - Temperature : {0}".format(choice_temp))
+
+            if(choice_temp == "precip"): # We need to change the message because that not the same than the temperature.
+                self.logger.debug("[INFO] - You choose {0}".format(choice_temp))
+            else:
+
+                self.logger.debug("[INFO] - Temperature : {0}".format(choice_temp))
 
             # We generate the map.
             fig = visual.generate_map(number_day, choice_temp)
@@ -379,8 +384,10 @@ class Visual_Tkinter:
 
         if(self.selected_data_temp.get() == "Minimum Temperature"):
             choice_temp = 'tmin'
-        else: # Maximum Temperature.
+        elif(self.selected_data_temp.get() == "Maximum Temperature"):
             choice_temp = 'tmax'
+        else: # Precipitation.
+            choice_temp = 'precip'
 
         # We check the choice of the user.
 
