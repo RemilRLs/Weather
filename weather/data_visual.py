@@ -107,52 +107,86 @@ class Visual:
             lats = self.data_tmin.variables['lat'][:]
             lons = self.data_tmin.variables['lon'][:]
             vals = self.data_tmin.variables[temp][:]
+        elif(temp == 'precip'):
+            lats = self.data_prec.variables['lat'][:]
+            lons = self.data_prec.variables['lon'][:]
+            vals = self.data_prec.variables[temp][:]
         else:
             lats = self.data_tmax.variables['lat'][:]
             lons = self.data_tmax.variables['lon'][:]
             vals = self.data_tmax.variables[temp][:]
 
-        ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
-        c = ax.pcolormesh(lons, lats, vals[day], vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+        if (temp == 'tmin' or temp == 'tmax'):
 
-        ax.coastlines(resolution='110m')
-        ax.add_feature(cfeature.OCEAN.with_scale('50m'))
-        ax.add_feature(cfeature.LAND.with_scale('50m'))
-        ax.add_feature(cfeature.BORDERS.with_scale('50m'))
-        fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
+            c = ax.pcolormesh(lons, lats, vals[day], vmin=-10, vmax=40, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+
+            ax.coastlines(resolution='110m')
+            ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+            ax.add_feature(cfeature.LAND.with_scale('50m'))
+            ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+            fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+        else:
+            ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
+            c = ax.pcolormesh(lons, lats, vals[day], vmin=0, vmax=20, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+
+            ax.coastlines(resolution='110m')
+            ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+            ax.add_feature(cfeature.LAND.with_scale('50m'))
+            ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+            fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
 
         return fig
 
     def generate_map_month(self, start_month, end_month, temp):
 
-        lats = self.data_tmax.variables['lat'][:]
-        lons = self.data_tmax.variables['lon'][:]
-        vals = self.data_tmax.variables['tmax'][:]
+
 
         if(temp == 'tmin'):
             lats = self.data_tmin.variables['lat'][:]
             lons = self.data_tmin.variables['lon'][:]
             vals = self.data_tmin.variables[temp][:]
+        elif(temp == 'precip'):
+            lats = self.data_prec.variables['lat'][:]
+            lons = self.data_prec.variables['lon'][:]
+            vals = self.data_prec.variables[temp][:]
         else:
             lats = self.data_tmax.variables['lat'][:]
             lons = self.data_tmax.variables['lon'][:]
             vals = self.data_tmax.variables[temp][:]
 
+        if(temp == 'tmin' or temp == 'tmax'):
 
-        fig = plt.figure(figsize=(8,6), frameon=True)
-
-
-
-        monthly_vals = np.mean(vals[start_month : end_month], axis= 0) # On fait la moyenne sur chaque jour des longitudes et des lattitudes. 2D Tab.
+            fig = plt.figure(figsize=(8,6), frameon=True)
 
 
-        ax = plt.subplot(111, projection=ccrs.PlateCarree())
-        c = ax.pcolormesh(lons, lats, monthly_vals, vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
 
-        ax.coastlines(resolution='110m');
-        ax.add_feature(cfeature.OCEAN.with_scale('50m'))
-        ax.add_feature(cfeature.LAND.with_scale('50m'))
-        ax.add_feature(cfeature.BORDERS.with_scale('50m'))
-        plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            monthly_vals = np.mean(vals[start_month : end_month], axis= 0) # On fait la moyenne sur chaque jour des longitudes et des lattitudes. 2D Tab.
+
+
+            ax = plt.subplot(111, projection=ccrs.PlateCarree())
+            c = ax.pcolormesh(lons, lats, monthly_vals, vmin=-25, vmax=40, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+
+            ax.coastlines(resolution='110m');
+            ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+            ax.add_feature(cfeature.LAND.with_scale('50m'))
+            ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+            plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            plt.title("test")
+        else:
+            fig = plt.figure(figsize=(8,6), frameon=True)
+
+            monthly_vals = np.mean(vals[start_month : end_month], axis= 0) # On fait la moyenne sur chaque jour des longitudes et des lattitudes. 2D Tab.
+
+
+            ax = plt.subplot(111, projection=ccrs.PlateCarree())
+            c = ax.pcolormesh(lons, lats, monthly_vals, vmin=0, vmax=20, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+
+            ax.coastlines(resolution='110m');
+            ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+            ax.add_feature(cfeature.LAND.with_scale('50m'))
+            ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+            plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            plt.title("test")
 
         return fig
