@@ -96,7 +96,7 @@ class Visual:
 
 
 
-    def generate_map(self, day, temp):
+    def generate_map(self, day, temp, day_month, month, year):
 
         fig = plt.figure(figsize=(8,6), frameon=True)
         gs = fig.add_gridspec(3,1)
@@ -126,6 +126,14 @@ class Visual:
             ax.add_feature(cfeature.LAND.with_scale('50m'))
             ax.add_feature(cfeature.BORDERS.with_scale('50m'))
             fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            fig.patch.set_facecolor('none')
+
+            if(temp == 'tmin'):
+                title = "Minimum temperature of {} {} {}".format(day_month, month, year)
+                plt.title(title)
+            else:
+                title = "Maximum temperature of {} {} {}".format(day_month, month, year)
+                plt.title(title)
         else:
             ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
             c = ax.pcolormesh(lons, lats, vals[day], vmin=0, vmax=20, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
@@ -135,10 +143,14 @@ class Visual:
             ax.add_feature(cfeature.LAND.with_scale('50m'))
             ax.add_feature(cfeature.BORDERS.with_scale('50m'))
             fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            fig.patch.set_facecolor('none')
+
+            title = "Precipitation of {} {} {}".format(day_month, month, year)
+            plt.title(title)
 
         return fig
 
-    def generate_map_month(self, start_month, end_month, temp):
+    def generate_map_month(self, start_month, end_month, temp, month, year):
 
 
 
@@ -158,6 +170,7 @@ class Visual:
         if(temp == 'tmin' or temp == 'tmax'):
 
             fig = plt.figure(figsize=(8,6), frameon=True)
+            fig.patch.set_facecolor('none')
 
 
 
@@ -172,9 +185,15 @@ class Visual:
             ax.add_feature(cfeature.LAND.with_scale('50m'))
             ax.add_feature(cfeature.BORDERS.with_scale('50m'))
             plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
-            plt.title("test")
+            if(temp == 'tmin'):
+                title = "Minimum temperature of {} {}".format(month, year)
+                plt.title(title)
+            else:
+                title = "Maximum temperature of {} {}".format(month, year)
+                plt.title(title)
         else:
             fig = plt.figure(figsize=(8,6), frameon=True)
+            fig.patch.set_facecolor('none')
 
             monthly_vals = np.mean(vals[start_month : end_month], axis= 0) # On fait la moyenne sur chaque jour des longitudes et des lattitudes. 2D Tab.
 
@@ -187,6 +206,8 @@ class Visual:
             ax.add_feature(cfeature.LAND.with_scale('50m'))
             ax.add_feature(cfeature.BORDERS.with_scale('50m'))
             plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
-            plt.title("test")
+
+            title = "Precipitation of {} {}".format(month, year)
+            plt.title(title)
 
         return fig
