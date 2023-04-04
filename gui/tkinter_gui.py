@@ -434,26 +434,47 @@ class Visual_Tkinter:
             else:
 
                 if (maxmin_input == 'Minimum Value'):
+                    if(choice_temp == "precip"):
+                        self.logger.debug("[INFO] - Get the day with the least rain...")
 
-                    self.logger.debug("[INFO] - Get the Coldest Day in Earth this Year...")
+                        number_day = self.operation.getAverage_min(choice_temp, self.weather.dataset_prec)
 
-                    number_day = self.operation.getAverage_min(choice_temp, self.weather.dataset_tmax)
+                        self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    self.logger.debug("[INFO] - Day number : {0}".format(number_day))
+                        fig = visual.generate_map(number_day, choice_temp)
+                        canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
+                        canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
+                    else:
+                        self.logger.debug("[INFO] - Get the Coldest Day in Earth this Year...")
 
-                    fig = visual.generate_map(number_day, choice_temp)
-                    canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
-                    canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
+                        number_day = self.operation.getAverage_min(choice_temp, self.weather.dataset_tmax)
+
+                        self.logger.debug("[INFO] - Day number : {0}".format(number_day))
+
+                        fig = visual.generate_map(number_day, choice_temp)
+                        canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
+                        canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                 else:
-                    self.logger.debug("[INFO] - Get the Hotest Day in Earth this Year...")
+                    if(choice_temp == "precip"):
+                        self.logger.debug("[INFO] - Get the day with the most rain...")
 
-                    number_day = self.operation.getAverage_max(choice_temp, self.weather.dataset_tmax)
+                        number_day = self.operation.getAverage_min(choice_temp, self.weather.dataset_prec)
 
-                    self.logger.debug("[INFO] - Day number : {0}".format(number_day))
+                        self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp)
-                    canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
-                    canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
+                        fig = visual.generate_map(number_day, choice_temp)
+                        canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
+                        canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
+                    else:
+                        self.logger.debug("[INFO] - Get the Hotest Day in Earth this Year...")
+    
+                        number_day = self.operation.getAverage_max(choice_temp, self.weather.dataset_tmax)
+
+                        self.logger.debug("[INFO] - Day number : {0}".format(number_day))
+
+                        fig = visual.generate_map(number_day, choice_temp)
+                        canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
+                        canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
 
 
