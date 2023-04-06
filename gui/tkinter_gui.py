@@ -32,7 +32,7 @@ class Visual_Tkinter:
         style.configure('Custom.TFrame', background='white')
         win.title('PastWeather')
         win.resizable(width=False, height=False)
-        win.geometry('1375x800')
+        win.geometry('1375x850')
 
 
 
@@ -224,50 +224,56 @@ class Visual_Tkinter:
         win.mainloop()
 
     def get_year_user_choose(self):
-        self.selected_value = self.menu.get()
+
+        try:
+            self.selected_value = self.menu.get()
 
 
-        p_path_file1 = "resources/temperature/tmin." + self.selected_value + ".nc" # Min Temp
-        p_path_file2 = "resources/temperature/tmax." + self.selected_value + ".nc" # Max Temp
-        p_path_file3 = "resources/precipation/precip." + self.selected_value + ".nc" # Prec
+            p_path_file1 = "resources/temperature/tmin." + self.selected_value + ".nc" # Min Temp
+            p_path_file2 = "resources/temperature/tmax." + self.selected_value + ".nc" # Max Temp
+            p_path_file3 = "resources/precipation/precip." + self.selected_value + ".nc" # Prec
 
-        self.weather.open_weather_file(p_path_file1, p_path_file2, p_path_file3)
+            self.weather.open_weather_file(p_path_file1, p_path_file2, p_path_file3)
 
-        self.display_button.config(state=tk.NORMAL)
-        self.option_date.config(state=tk.NORMAL)
-        self.drop_data_month.config(state=tk.NORMAL)
-        self.drop_data_temp.config(state=tk.NORMAL)
-        self.option_other.config(state=tk.NORMAL)
-        self.drop_data_maxmin.config(state=tk.NORMAL)
-        self.button.config(state=tk.NORMAL)
-        self.drop_data_day.config(state=tk.NORMAL)
-        self.drop_data_month.config(state=tk.NORMAL)
-        self.drop_data_temp_month_2.config(state=tk.NORMAL)
-        self.option_date_month.config(state=tk.NORMAL)
-        self.drop_data_month_2.config(state=tk.NORMAL)
-        self.option_other_month.config(state=tk.NORMAL)
-        self.button_month.config(state=tk.NORMAL)
-        self.drop_data_maxmin_month.config(state=tk.NORMAL)
+            self.display_button.config(state=tk.NORMAL)
+            self.option_date.config(state=tk.NORMAL)
+            self.drop_data_month.config(state=tk.NORMAL)
+            self.drop_data_temp.config(state=tk.NORMAL)
+            self.option_other.config(state=tk.NORMAL)
+            self.drop_data_maxmin.config(state=tk.NORMAL)
+            self.button.config(state=tk.NORMAL)
+            self.drop_data_day.config(state=tk.NORMAL)
+            self.drop_data_month.config(state=tk.NORMAL)
+            self.drop_data_temp_month_2.config(state=tk.NORMAL)
+            self.option_date_month.config(state=tk.NORMAL)
+            self.drop_data_month_2.config(state=tk.NORMAL)
+            self.option_other_month.config(state=tk.NORMAL)
+            self.button_month.config(state=tk.NORMAL)
+            self.drop_data_maxmin_month.config(state=tk.NORMAL)
+        except Exception as e:
+            messagebox.showerror("Error", f"An error occurred while loading the dataset: {str(e)}")
 
 
     def check_coordinates_and_generate(self):
         lat = self.lat_entry.get()
         lon = self.lon_entry.get()
 
-        if (not lat.replace(".", "").isdigit() and not lat.replace("-", "")) or (not lon.replace(".", "").isdigit() and not lat.replace("-", "")):
-            messagebox.showerror("Error", "Please enter valid numeric values for Latitude and Longitude.")
-        else:
+
+        try:
             lat_value = float(lat)
             lon_value = float(lon)
             print(f"Latitude: {lat_value}, Longitude: {lon_value}")
-
-
             # We generate the local curve.
             visual = Visual(self.weather.dataset_tmin, self.weather.dataset_tmax, self.weather.dataset_prec, self.window)
             fig = visual.generate_visual_temperature(lat_value, lon_value)
             canvas = FigureCanvasTkAgg(fig, self.local_frame_curve)
             canvas = canvas.get_tk_widget()
             canvas.grid(row=1, column=0, columnspan=20)
+        except Exception as e:
+            messagebox.showerror("Error", "Please enter valid numeric values for Latitude and Longitude.")
+
+
+
 
 
 
@@ -306,8 +312,12 @@ class Visual_Tkinter:
             choice_temp = 'tmin'
         elif(self.selected_data_temp.get() == "Precipitation"):
             choice_temp= 'precip'
-        else: # Maximum Temperature.
+        elif (self.selected_data_temp.get() == "Maximum Temperature"): # Maximum Temperature.
             choice_temp = 'tmax'
+        else:
+            messagebox.showerror("Error", "You need to select the Data that you want.")
+            return
+
 
         # We check the choice of the user.
 
@@ -330,7 +340,6 @@ class Visual_Tkinter:
             canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
         else:
             maxmin_input = self.selected_data_maxmin.get()
-            print("Uh ?")
 
             if(choice_temp == 'tmin'):
 
@@ -342,7 +351,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp)
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
@@ -353,7 +362,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
             elif(choice_temp == 'precip'):
@@ -365,7 +374,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
@@ -381,7 +390,6 @@ class Visual_Tkinter:
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
             elif(choice_temp == 'tmax'):
-                print("WHAT")
                 if(maxmin_input == 'Minimum Value'):
 
                     self.logger.debug("[INFO] - Get the Coldest Day in Earth this Year...")
@@ -390,7 +398,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                 else:
@@ -400,7 +408,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
@@ -449,7 +457,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                 else:
@@ -458,7 +466,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
             else:
@@ -471,7 +479,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                     else:
@@ -492,7 +500,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                     else:
@@ -502,7 +510,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month(), self.menu.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 

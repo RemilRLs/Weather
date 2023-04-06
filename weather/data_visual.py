@@ -37,6 +37,8 @@ class Visual:
         mask = [[False] * len(lons) for _ in range(len(lats))]
 
         continuer = True
+        if lon_user > 180:
+            lon_user = lon_user - 360
 
         for i, lat in enumerate(lats):
             for j, lon in enumerate(lons):
@@ -50,9 +52,8 @@ class Visual:
                 if coordinate != (0, 0):
                     real_coordinate = coordinate
                     pos = [i, j]
-                if lon_user > 180:
-                    lon_user = lon_user - 360
-                break
+
+
             if not continuer:
                 break
         print(shortest_distance, real_coordinate, pos)
@@ -191,7 +192,7 @@ class Visual:
             else:
                 title = "Maximum temperature of {} {}".format(month, year)
                 plt.title(title)
-        else:
+        elif temp == 'precip':
             fig = plt.figure(figsize=(8,6), frameon=True)
             fig.patch.set_facecolor('none')
 
