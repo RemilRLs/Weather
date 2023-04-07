@@ -97,7 +97,7 @@ class Visual:
 
 
 
-    def generate_map(self, day, temp, day_month, month, year):
+    def generate_map(self, day, temp, day_month, month, year, user_maxmin_choose ,user_data_choose):
 
         fig = plt.figure(figsize=(8,6), frameon=True)
         gs = fig.add_gridspec(3,1)
@@ -129,12 +129,19 @@ class Visual:
             fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
             fig.patch.set_facecolor('none')
 
-            if(temp == 'tmin'):
+            if(temp == 'tmin'  and user_data_choose != 'other'):
                 title = "Minimum temperature of {} {} {}".format(day_month, month, year)
                 plt.title(title)
-            else:
+            elif (temp == 'tmax' and user_data_choose != 'other'):
                 title = "Maximum temperature of {} {} {}".format(day_month, month, year)
                 plt.title(title)
+            else:
+                if(user_maxmin_choose == "Maximal Value"):
+                    title = "Maximal Value temperature of {}".format(year)
+                    plt.title(title)
+                else:
+                    title = "Minimal Value temperature of {}".format(year)
+                    plt.title(title)
         else:
             ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
             c = ax.pcolormesh(lons, lats, vals[day], vmin=0, vmax=20, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
@@ -151,7 +158,7 @@ class Visual:
 
         return fig
 
-    def generate_map_month(self, start_month, end_month, temp, month, year):
+    def generate_map_month(self, start_month, end_month, temp, month, year, user_input_maxmin):
 
 
 
@@ -189,9 +196,11 @@ class Visual:
             if(temp == 'tmin'):
                 title = "Minimum temperature of {} {}".format(month, year)
                 plt.title(title)
-            else:
+            elif(temp == 'tmax'):
                 title = "Maximum temperature of {} {}".format(month, year)
                 plt.title(title)
+            elif(user_input_maxmin == "Maximum Value" or user_input_maxmin == "Minimum Value"):
+                title = "TESERE temperature of {} {}".format(month, year)
         elif temp == 'precip':
             fig = plt.figure(figsize=(8,6), frameon=True)
             fig.patch.set_facecolor('none')

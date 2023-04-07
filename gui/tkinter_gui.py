@@ -335,7 +335,7 @@ class Visual_Tkinter:
                 self.logger.debug("[INFO] - Temperature : {0}".format(choice_temp))
 
             # We generate the map.
-            fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+            fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
             canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
             canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
         else:
@@ -351,7 +351,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
@@ -362,7 +362,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
             elif(choice_temp == 'precip'):
@@ -374,7 +374,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
@@ -398,7 +398,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                 else:
@@ -408,7 +408,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
@@ -442,7 +442,7 @@ class Visual_Tkinter:
             number_day = self.operation.return_day_in_month(int(self.menu.get()),self.selected_date_month.get())  # We get the number of day in this month and now we can slice the tab.
             end_day_month = start_day_month + number_day
 
-            fig = visual.generate_map_month(start_day_month, end_day_month, choice_temp, self.selected_date_month.get(), self.menu.get())
+            fig = visual.generate_map_month(start_day_month, end_day_month, choice_temp, self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
             canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
             canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
         else:
@@ -457,7 +457,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                 else:
@@ -466,7 +466,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
             else:
@@ -479,7 +479,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                     else:
@@ -500,7 +500,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                     else:
@@ -510,7 +510,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
