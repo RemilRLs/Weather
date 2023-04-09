@@ -59,7 +59,7 @@ class Visual_Tkinter:
 
         # Loading Dropdown Menu.
 
-        drop = ttk.OptionMenu(win, self.menu, "Choose a year", "2020", "2021", "2022")
+        drop = ttk.OptionMenu(win, self.menu, "Choose a year", "1979", "1980", "1981", "1982","1983","1984","1985","1986","1987","1988","1989","1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002","2003","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019", "2020", "2021", "2022")
         drop.grid(row = 0, column = 1)
 
         button = ttk.Button(text='Load', command= self.get_year_user_choose)
@@ -457,7 +457,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                 else:
@@ -466,7 +466,7 @@ class Visual_Tkinter:
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
             else:
@@ -479,7 +479,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                     else:
@@ -500,7 +500,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                     else:
@@ -510,7 +510,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_option_day.get())
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
