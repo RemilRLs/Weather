@@ -143,8 +143,10 @@ class Visual:
                     title = "Minimal Value temperature of {}".format(year)
                     plt.title(title)
         else:
+
             ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
-            c = ax.pcolormesh(lons, lats, vals[day], vmin=0, vmax=20, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+            c = ax.pcolormesh(lons, lats, vals[day], vmin=0, vmax=20, transform=ccrs.PlateCarree(), cmap="jet",
+                              shading='auto')
 
             ax.coastlines(resolution='110m')
             ax.add_feature(cfeature.OCEAN.with_scale('50m'))
@@ -152,9 +154,18 @@ class Visual:
             ax.add_feature(cfeature.BORDERS.with_scale('50m'))
             fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
             fig.patch.set_facecolor('none')
+            if(temp == 'precip' and user_data_choose != 'other'):
 
-            title = "Precipitation of {} {} {}".format(day_month, month, year)
-            plt.title(title)
+
+                title = "Precipitation of {} {} {}".format(day_month, month, year)
+                plt.title(title)
+            else:
+                if(user_maxmin_choose == "Maximal Value"):
+                    title = "Most rain in the year  {}".format(year)
+                    plt.title(title)
+                else:
+                    title = "Least rain in the year {}".format(year)
+                    plt.title(title)
 
         return fig
 

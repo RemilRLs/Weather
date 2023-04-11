@@ -141,10 +141,11 @@ class Visual_Tkinter:
         label_character = ttk.Label(self.global_frame_page_day, text='/')
         label_character.grid(row=1, column=2, sticky=tk.W)
 
-        self.drop_data_month = ttk.OptionMenu(self.global_frame_page_day, self.selected_date_month, "January", "February",
+        self.drop_data_month = ttk.OptionMenu(self.global_frame_page_day, self.selected_date_month, "January","January", "February",
                                         "March", "April", "May", "June", "July", "August", "September", "October",
                                         "November", "December")
         self.drop_data_month.grid(row=1, column=2, sticky=tk.E)
+
 
         self.drop_data_month.config(state=tk.DISABLED)
 
@@ -166,7 +167,7 @@ class Visual_Tkinter:
         self.option_other.config(state=tk.DISABLED)
 
         # Configuration Maximal and Minimal value.
-        self.drop_data_maxmin = ttk.OptionMenu(self.global_frame_page_day, self.selected_data_maxmin, "Value","Minimum Value",
+        self.drop_data_maxmin = ttk.OptionMenu(self.global_frame_page_day, self.selected_data_maxmin, "Value","Minimal Value",
                                          "Maximal Value")
         self.drop_data_maxmin.grid(row=2, column=2, sticky=tk.W)
         self.drop_data_maxmin.config(state=tk.DISABLED)
@@ -190,7 +191,7 @@ class Visual_Tkinter:
         self.drop_data_temp_month_2.config(state=tk.DISABLED)
 
 
-        self.drop_data_month_2 = ttk.OptionMenu(self.global_frame_page_month, self.selected_date_month, "January", "February",
+        self.drop_data_month_2 = ttk.OptionMenu(self.global_frame_page_month, self.selected_date_month, "January","January", "February",
                                         "March", "April", "May", "June", "July", "August", "September", "October",
                                         "November", "December")
         self.drop_data_month_2.grid(row=1, column=2, sticky=tk.E)
@@ -211,7 +212,7 @@ class Visual_Tkinter:
         self.option_other_month.config(state=tk.DISABLED)
 
         # Configuration Maximal and Minimal value.
-        self.drop_data_maxmin_month = ttk.OptionMenu(self.global_frame_page_month, self.selected_data_maxmin,"Value" ,"Minimum Value",
+        self.drop_data_maxmin_month = ttk.OptionMenu(self.global_frame_page_month, self.selected_data_maxmin,"Value" ,"Minimal Value",
                                          "Maximal Value")
         self.drop_data_maxmin_month.grid(row=2, column=2, sticky=tk.W)
         self.drop_data_maxmin_month.config(state=tk.DISABLED)
@@ -343,7 +344,7 @@ class Visual_Tkinter:
 
             if(choice_temp == 'tmin'):
 
-                if(maxmin_input == 'Minimum Value'):
+                if(maxmin_input == 'Minimal Value'):
 
                     self.logger.debug("[INFO] - Get the Coldest Day in Earth this Year...")
 
@@ -354,8 +355,7 @@ class Visual_Tkinter:
                     fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
-
-                else:
+                elif(maxmin_input == 'Maximal Value'):
                     self.logger.debug("[INFO] - Get the Hotest Day in Earth this Year...")
 
                     number_day = self.operation.getAverage_max(choice_temp, self.weather.dataset_tmin)
@@ -365,8 +365,11 @@ class Visual_Tkinter:
                     fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(), self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
+                else:
+                    messagebox.showerror("Error", "You need to select a Value in the section Other.")
+
             elif(choice_temp == 'precip'):
-                if(maxmin_input == 'Minimum Value'):
+                if(maxmin_input == 'Minimal Value'):
 
                     self.logger.debug("[INFO] - Get the day with the least rain...")
 
@@ -378,19 +381,21 @@ class Visual_Tkinter:
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
 
-                else:
+                elif(maxmin_input == "Maximal Value"):
                     self.logger.debug("[INFO] - Get the day with the most rain...")
 
                     number_day = self.operation.getAverage_max(choice_temp, self.weather.dataset_prec)
 
                     self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                    fig = visual.generate_map(number_day, choice_temp)
+                    fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
+                else:
+                    messagebox.showerror("Error", "You need to select a Value in the section Other.")
 
             elif(choice_temp == 'tmax'):
-                if(maxmin_input == 'Minimum Value'):
+                if(maxmin_input == 'Minimal Value'):
 
                     self.logger.debug("[INFO] - Get the Coldest Day in Earth this Year...")
 
@@ -401,7 +406,7 @@ class Visual_Tkinter:
                     fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
-                else:
+                elif(maxmin_input == "Maximal Value"):
                     self.logger.debug("[INFO] - Get the Hotest Day in Earth this Year...")
 
                     number_day = self.operation.getAverage_max(choice_temp, self.weather.dataset_tmax)
@@ -411,6 +416,8 @@ class Visual_Tkinter:
                     fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                     canvas = FigureCanvasTkAgg(fig, self.global_frame_page_day)
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
+                else:
+                    messagebox.showerror("Error", "You need to select a Value in the section Other.")
 
 
     def run_generate_map_monthly(self):
@@ -449,7 +456,7 @@ class Visual_Tkinter:
             maxmin_input = self.selected_data_maxmin.get()
             if (choice_temp == 'tmin'):
 
-                if (maxmin_input == 'Minimum Value'):
+                if (maxmin_input == 'Minimal Value'):
 
                     self.logger.debug("[INFO] - Get the Coldest Day in Earth this Year...")
 
@@ -471,7 +478,7 @@ class Visual_Tkinter:
                     canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
             else:
 
-                if (maxmin_input == 'Minimum Value'):
+                if (maxmin_input == 'Minimal Value'):
                     if(choice_temp == "precip"):
                         self.logger.debug("[INFO] - Get the day with the least rain...")
 
@@ -489,7 +496,7 @@ class Visual_Tkinter:
 
                         self.logger.debug("[INFO] - Day number : {0}".format(number_day))
 
-                        fig = visual.generate_map(number_day, choice_temp)
+                        fig = visual.generate_map(number_day, choice_temp, self.selected_date_day.get(), self.selected_date_month.get(), self.menu.get(),self.selected_data_maxmin.get(), self.selected_option_day.get())
                         canvas = FigureCanvasTkAgg(fig, self.global_frame_page_month)
                         canvas.get_tk_widget().grid(row=4, column=0, columnspan=50)
                 else:
