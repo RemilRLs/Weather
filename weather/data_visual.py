@@ -37,6 +37,8 @@ class Visual:
         mask = [[False] * len(lons) for _ in range(len(lats))]
 
         continuer = True
+        if lon_user > 180:
+            lon_user = lon_user - 360
 
         for i, lat in enumerate(lats):
             for j, lon in enumerate(lons):
@@ -50,9 +52,8 @@ class Visual:
                 if coordinate != (0, 0):
                     real_coordinate = coordinate
                     pos = [i, j]
-                if lon_user > 180:
-                    lon_user = lon_user - 360
-                break
+
+
             if not continuer:
                 break
         print(shortest_distance, real_coordinate, pos)
@@ -96,7 +97,7 @@ class Visual:
 
 
 
-    def generate_map(self, day, temp):
+    def generate_map(self, day, temp, day_month, month, year, user_maxmin_choose ,user_data_choose):
 
         fig = plt.figure(figsize=(8,6), frameon=True)
         gs = fig.add_gridspec(3,1)
@@ -107,52 +108,134 @@ class Visual:
             lats = self.data_tmin.variables['lat'][:]
             lons = self.data_tmin.variables['lon'][:]
             vals = self.data_tmin.variables[temp][:]
+        elif(temp == 'precip'):
+            lats = self.data_prec.variables['lat'][:]
+            lons = self.data_prec.variables['lon'][:]
+            vals = self.data_prec.variables[temp][:]
         else:
             lats = self.data_tmax.variables['lat'][:]
             lons = self.data_tmax.variables['lon'][:]
             vals = self.data_tmax.variables[temp][:]
 
-        ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
-        c = ax.pcolormesh(lons, lats, vals[day], vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+        if (temp == 'tmin' or temp == 'tmax'):
 
-        ax.coastlines(resolution='110m')
-        ax.add_feature(cfeature.OCEAN.with_scale('50m'))
-        ax.add_feature(cfeature.LAND.with_scale('50m'))
-        ax.add_feature(cfeature.BORDERS.with_scale('50m'))
-        fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
+            c = ax.pcolormesh(lons, lats, vals[day], vmin=-10, vmax=40, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+
+            ax.coastlines(resolution='110m')
+            ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+            ax.add_feature(cfeature.LAND.with_scale('50m'))
+            ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+            fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            fig.patch.set_facecolor('none')
+
+            if(temp == 'tmin'  and user_data_choose != 'other'):
+                title = "Minimum temperature of {} {} {}".format(day_month, month, year)
+                plt.title(title)
+            elif (temp == 'tmax' and user_data_choose != 'other'):
+                title = "Maximum temperature of {} {} {}".format(day_month, month, year)
+                plt.title(title)
+            else:
+                if(user_maxmin_choose == "Maximal Value"):
+                    title = "Maximal Value temperature of {}".format(year)
+                    plt.title(title)
+                else:
+                    title = "Minimal Value temperature of {}".format(year)
+                    plt.title(title)
+        else:
+
+            ax = fig.add_subplot(111, projection=ccrs.PlateCarree())
+            c = ax.pcolormesh(lons, lats, vals[day], vmin=0, vmax=20, transform=ccrs.PlateCarree(), cmap="jet",
+                              shading='auto')
+
+            ax.coastlines(resolution='110m')
+            ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+            ax.add_feature(cfeature.LAND.with_scale('50m'))
+            ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+            fig.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            fig.patch.set_facecolor('none')
+            if(temp == 'precip' and user_data_choose != 'other'):
+
+
+                title = "Precipitation of {} {} {}".format(day_month, month, year)
+                plt.title(title)
+            else:
+                if(user_maxmin_choose == "Maximal Value"):
+                    title = "Most rain in the year  {}".format(year)
+                    plt.title(title)
+                else:
+                    title = "Least rain in the year {}".format(year)
+                    plt.title(title)
 
         return fig
 
-    def generate_map_month(self, start_month, end_month, temp):
+    def generate_map_month(self, start_month, end_month, temp, month, year, user_input_maxmin, user_option):
 
-        lats = self.data_tmax.variables['lat'][:]
-        lons = self.data_tmax.variables['lon'][:]
-        vals = self.data_tmax.variables['tmax'][:]
+
 
         if(temp == 'tmin'):
             lats = self.data_tmin.variables['lat'][:]
             lons = self.data_tmin.variables['lon'][:]
             vals = self.data_tmin.variables[temp][:]
+        elif(temp == 'precip'):
+            lats = self.data_prec.variables['lat'][:]
+            lons = self.data_prec.variables['lon'][:]
+            vals = self.data_prec.variables[temp][:]
         else:
             lats = self.data_tmax.variables['lat'][:]
             lons = self.data_tmax.variables['lon'][:]
             vals = self.data_tmax.variables[temp][:]
 
+        if(temp == 'tmin' or temp == 'tmax'):
 
-        fig = plt.figure(figsize=(8,6), frameon=True)
-
-
-
-        monthly_vals = np.mean(vals[start_month : end_month], axis= 0) # On fait la moyenne sur chaque jour des longitudes et des lattitudes. 2D Tab.
+            fig = plt.figure(figsize=(8,6), frameon=True)
+            fig.patch.set_facecolor('none')
 
 
-        ax = plt.subplot(111, projection=ccrs.PlateCarree())
-        c = ax.pcolormesh(lons, lats, monthly_vals, vmin=-25, vmax=25, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
 
-        ax.coastlines(resolution='110m');
-        ax.add_feature(cfeature.OCEAN.with_scale('50m'))
-        ax.add_feature(cfeature.LAND.with_scale('50m'))
-        ax.add_feature(cfeature.BORDERS.with_scale('50m'))
-        plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            monthly_vals = np.mean(vals[start_month : end_month], axis= 0) # On fait la moyenne sur chaque jour des longitudes et des lattitudes. 2D Tab.
+
+
+            ax = plt.subplot(111, projection=ccrs.PlateCarree())
+            c = ax.pcolormesh(lons, lats, monthly_vals, vmin=-25, vmax=40, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+
+            ax.coastlines(resolution='110m');
+            ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+            ax.add_feature(cfeature.LAND.with_scale('50m'))
+            ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+            plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+            if(user_option == 'pre_month'):
+
+                if(temp == 'tmin'):
+                    title = "Minimal temperature for {} {}".format(month, year)
+                    plt.title(title)
+                elif(temp == 'tmax'):
+                    title = "Maximal temperature for {} {}".format(month, year)
+                    plt.title(title)
+            else:
+                if(temp == 'tmin'):
+                    title = "Minimal temperature is during {} {}".format(month, year)
+                    plt.title(title)
+                elif(temp == 'tmax'):
+                    title = "Maximal temperature is during {} {}".format(month, year)
+                    plt.title(title)
+        elif temp == 'precip':
+            fig = plt.figure(figsize=(8,6), frameon=True)
+            fig.patch.set_facecolor('none')
+
+            monthly_vals = np.mean(vals[start_month : end_month], axis= 0) # On fait la moyenne sur chaque jour des longitudes et des lattitudes. 2D Tab.
+
+
+            ax = plt.subplot(111, projection=ccrs.PlateCarree())
+            c = ax.pcolormesh(lons, lats, monthly_vals, vmin=0, vmax=20, transform=ccrs.PlateCarree(), cmap="jet", shading='auto')
+
+            ax.coastlines(resolution='110m');
+            ax.add_feature(cfeature.OCEAN.with_scale('50m'))
+            ax.add_feature(cfeature.LAND.with_scale('50m'))
+            ax.add_feature(cfeature.BORDERS.with_scale('50m'))
+            plt.colorbar(c, ax=ax, fraction=0.046, pad=0.04)
+
+            title = "Precipitation of {} {}".format(month, year)
+            plt.title(title)
 
         return fig

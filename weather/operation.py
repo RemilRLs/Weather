@@ -26,16 +26,63 @@ class Operation:
     def getAverage_min(self, temp, dataset):
         vals = dataset.variables[temp][:]
 
-        # We get the max average temperature in a year.
+        # We get the min average temperature in a year.
 
         # We calculate the average/mean for each day on the longitude and the latitude (that one was so hard to find).
         daily_avg = np.mean(vals, axis=(1, 2))
 
-        # We get the index of the max temp average in a day.
+        # We get the index of the min temp average in a day.
         coldest_day = np.argmin(daily_avg)
 
 
         return coldest_day
+
+    def get_average_month_min(self, temp, dataset, year):
+        vals = dataset.variables[temp][:]
+
+        tmp = 50.0
+
+
+
+        for i in range (1, 12):
+
+            number_day_begin_month = self.get_number_day_min_max(i, year)
+            day_in_month = self.return_day_in_month_minmax(year, i)
+
+            vals_month = vals[number_day_begin_month : (number_day_begin_month + day_in_month)]
+            monthly_avg = np.mean(vals_month, axis=(1,2))
+
+            min_month = min(monthly_avg)
+
+
+            if(min_month < tmp):
+                tmp = min_month
+                month = i
+                tuple_coordonate_month_min = (number_day_begin_month, (number_day_begin_month + day_in_month))
+
+        return tuple_coordonate_month_min, month
+
+    def get_average_month_max(self, temp, dataset, year):
+        vals = dataset.variables[temp][:]
+
+        tmp = 0.0
+
+        for i in range(1, 12):
+
+            number_day_begin_month = self.get_number_day_min_max(i, year)
+            day_in_month = self.return_day_in_month_minmax(year, i)
+
+            vals_month = vals[number_day_begin_month: (number_day_begin_month + day_in_month)]
+            monthly_avg = np.mean(vals_month, axis=(1, 2))
+
+            max_month = max(monthly_avg)
+
+            if (max_month > tmp):
+                tmp = max_month
+                month = i
+                tuple_coordonate_month_max = (number_day_begin_month, (number_day_begin_month + day_in_month))
+
+        return tuple_coordonate_month_max, month
 
     def generate_date(self, year, month):
 
@@ -91,6 +138,22 @@ class Operation:
                 'December': 12
         }[month]
 
+    def num_to_month(self, num):
+        return {
+                1 : "January",
+                2 : "February",
+                3 : "March",
+                4 : "April",
+                5 : "May",
+                6 : "June",
+                7 : "July",
+                8 : "August",
+                9 : "September",
+                10 : "October",
+                11 : "November",
+                12 : "December"
+        }[num]
+
     """
         Function to remove duplicate.
 
@@ -131,5 +194,21 @@ class Operation:
             day = (dt.date(year, nub_month + 1, 1) - dt.date(year, nub_month, 1)).days
         else: # If it's december we go to the next year.
             day = (dt.date(year + 1, 1, 1) - dt.date(year, nub_month, 1)).days
+
+        return day
+
+    def get_number_day_min_max(self, month, year):
+        user_date = dt.date(int(year), month, 1)
+
+        # We get the number of the day in a specific year.
+
+        number_day = user_date.toordinal() - dt.date(user_date.year, 1, 1).toordinal() + 1
+
+        return number_day
+
+    def return_day_in_month_minmax(self, year, month):
+
+        day = (dt.date(int(year), month + 1, 1) - dt.date(int(year), month, 1)).days
+
 
         return day
